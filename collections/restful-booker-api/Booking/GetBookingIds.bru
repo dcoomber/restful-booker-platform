@@ -1,0 +1,37 @@
+meta {
+  name: GetBookingIds
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/booking?lastname={{lastName}}
+  body: none
+  auth: none
+}
+
+query {
+  lastname: {{lastName}}
+  ~firstname: {{firstName}}
+  ~checkin: {{checkIn}}
+  ~checkout: {{checkOut}}
+}
+
+assert {
+  res.status: 200
+  res.body: isDefined
+  res.body[0].bookingid: isNumber
+}
+
+tests {
+  const bookingId = bru.getVar("bookingId");
+  const data = res.getBody();
+  
+  test("response is not empty", function() {
+    expect(data).to.not.have.lengthOf(0);
+  });
+  
+  test("response contains created bookingId", function() {
+    expect(data).to.deep.include({ "bookingid": bookingId });
+  });
+}

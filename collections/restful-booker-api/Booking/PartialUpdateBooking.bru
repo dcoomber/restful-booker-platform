@@ -1,0 +1,53 @@
+meta {
+  name: PartialUpdateBooking
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/booking/{{bookingId}}
+  body: json
+  auth: basic
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+auth:basic {
+  username: {{username}}
+  password: {{password}}
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+      "firstname" : "{{newFirstName}}",
+      "lastname" : "{{newLastName}}"
+  }
+}
+
+vars:pre-request {
+  newFirstName: Jerry
+  newLastName: Seinfeld
+}
+
+assert {
+  res.status: 200
+  res.body: isJson
+}
+
+tests {
+  const firstName = bru.getVar("newFirstName");
+  const lastName = bru.getVar("newLastName");
+  const data = res.getBody();
+  
+  test("name matches request variables", function() {
+    expect(data.firstname).to.equal(firstName);
+    expect(data.lastname).to.equal(lastName);
+  });
+}

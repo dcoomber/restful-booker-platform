@@ -1,0 +1,60 @@
+meta {
+  name: UpdateBooking
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/booking/{{bookingId}}
+  body: json
+  auth: basic
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+auth:basic {
+  username: {{username}}
+  password: {{password}}
+}
+
+auth:bearer {
+  token: 
+}
+
+body:json {
+  {
+      "firstname" : "{{newFirstName}}",
+      "lastname" : "{{newLastName}}",
+      "totalprice" : 111,
+      "depositpaid" : true,
+      "bookingdates" : {
+          "checkin" : "2018-01-01",
+          "checkout" : "2019-01-01"
+      },
+      "additionalneeds" : "Breakfast"
+  }
+}
+
+vars:pre-request {
+  newFirstName: James
+  newLastName: Brown
+}
+
+assert {
+  res.status: 200
+  res.body: isJson
+}
+
+tests {
+  const firstName = bru.getVar("newFirstName");
+  const lastName = bru.getVar("newLastName");
+  const data = res.getBody();
+  
+  test("name matches request variables", function() {
+    expect(data.firstname).to.equal(firstName);
+    expect(data.lastname).to.equal(lastName);
+  });
+}

@@ -1,0 +1,83 @@
+meta {
+  name: CreateBooking
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/booking
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: */*
+}
+
+body:json {
+  {
+      "firstname" : "{{firstName}}",
+      "lastname" : "{{lastName}}",
+      "totalprice" : {{totalPrice}},
+      "depositpaid" : {{depositPaid}},
+      "bookingdates" : {
+          "checkin" : "{{checkIn}}",
+          "checkout" : "{{checkOut}}"
+      },
+      "additionalneeds" : "{{additionalNeeds}}"
+  }
+}
+
+assert {
+  res.status: 200
+  res.body: isJson
+  res.body.bookingid: isNumber
+  res.body.booking.firstname: isString
+  res.body.booking.depositpaid: isBoolean
+  res.body.booking.bookingdates.checkin: isString
+}
+
+script:pre-request {
+  // common first names in Africa / South Africa
+  const firstNames = ["Mohammed", "Fatima", "Amina", "Kwame", "Chinwe", "John", "Themba", "Sipho", "Nomzamo", "Precious"];
+  
+  // common last names in Africa / South Africa
+  const lastNames = ["Smith", "Mudau", "Kamau", "Chibuzo", "Nkosi", "Mkhize", "van der Merwe", "Botha", "Nguyen", "Jacobs"];
+  
+  // randomly select first and last names then add to collection variables
+  bru.setVar("firstName", firstNames[Math.floor(Math.random() * firstNames.length) - 1]);
+  bru.setVar("lastName", lastNames[Math.floor(Math.random() * lastNames.length) - 1]);
+  
+  // random deposit paid
+  const depositPaid = { min: 0, max: 1 };
+  bru.setVar("depositPaid", Math.floor(Math.random() * (depositPaid.max - depositPaid.min + 1) + depositPaid.min) === 1);
+  
+  // random check in and checkout dates
+  const advanceNotice = { min: 15, max: 180 };
+  const duration = { min: 1, max: 14 };
+  const currentDate = new Date();
+  const checkIn = new Date(currentDate);
+  checkIn.setDate(currentDate.getDate() + Math.floor(Math.random() * (advanceNotice.max - advanceNotice.min + 1) + advanceNotice.min));
+  
+  const bookingDuration = Math.floor(Math.random() * (duration.max - duration.min + 1) + duration.min);
+  const checkOut = new Date(checkIn);
+  checkOut.setDate(checkIn.getDate() + bookingDuration);
+  
+  bru.setVar("checkIn", checkIn);
+  bru.setVar("checkOut", checkOut);
+  
+  // random total price
+  const price = { min: 50, max: 300 };
+  const totalPrice = Math.floor(Math.random() * (price.max - price.min + 1) + price.min) * bookingDuration;
+  bru.setVar("totalPrice", totalPrice);
+  
+  // additional requirements
+  const additionalNeeds = ["Breakfast", "Lunch", "Vegetarian", "Vegan", "None"];
+  
+  bru.setVar("additionalNeeds", additionalNeeds[Math.floor(Math.random() * additionalNeeds.length - 1)]);
+}
+
+script:post-response {
+  const data = res.getBody();
+  bru.setVar("bookingId", data.bookingid);
+}

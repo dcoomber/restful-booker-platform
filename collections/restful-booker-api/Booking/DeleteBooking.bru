@@ -1,0 +1,34 @@
+meta {
+  name: DeleteBooking
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/booking/{{bookingId}}
+  body: none
+  auth: basic
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:basic {
+  username: {{username}}
+  password: {{password}}
+}
+
+auth:bearer {
+  token: 
+}
+
+vars:pre-request {
+  newFirstName: James
+  newLastName: Brown
+}
+
+assert {
+  res.status: 204
+  res.body: isDefined
+}

@@ -1,0 +1,23 @@
+meta {
+  name: GetBooking
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/booking/{{bookingId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+assert {
+  res.status: 200
+  res.body: isJson
+  res.body.firstname: isString
+  res.body.depositpaid: isBoolean
+  res.body.bookingdates.checkin: isString
+}
