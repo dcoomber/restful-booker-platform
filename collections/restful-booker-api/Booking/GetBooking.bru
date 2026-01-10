@@ -21,3 +21,14 @@ assert {
   res.body.depositpaid: isBoolean
   res.body.bookingdates.checkin: isString
 }
+
+script:post-response {
+  let data = res.getBody();
+  bru.setVar("firstName", data.firstname);
+  bru.setVar("lastName", data.lastname);
+  bru.setVar("totalPrice", data.totalprice);
+  bru.setVar("depositPaid", data.depositpaid);
+  bru.setVar("checkIn", data.bookingdates.checkin);
+  bru.setVar("checkOut", data.bookingdates.checkout);
+  bru.setVar("additionalNeeds", data.additionalneeds);
+}

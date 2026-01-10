@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: {{baseUrl}}/booking?lastname={{lastName}}
+  url: {{baseUrl}}/booking
   body: none
   auth: none
 }
 
-query {
-  lastname: {{lastName}}
+params:query {
+  ~lastname: {{lastName}}
   ~firstname: {{firstName}}
   ~checkin: {{checkIn}}
   ~checkout: {{checkOut}}
@@ -21,6 +21,11 @@ assert {
   res.status: 200
   res.body: isDefined
   res.body[0].bookingid: isNumber
+}
+
+script:post-response {
+  let data = res.getBody();
+  bru.setVar("bookingId", data[0].bookingid);
 }
 
 tests {
