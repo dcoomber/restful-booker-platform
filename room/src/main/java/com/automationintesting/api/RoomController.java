@@ -9,8 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @RestController
 public class RoomController {
@@ -19,14 +20,20 @@ public class RoomController {
     private RoomService roomService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<Rooms> getRooms() throws SQLException {
-        Rooms rooms = roomService.getRooms();
+    public ResponseEntity<Rooms> getRooms(@RequestParam("checkin") Optional<String> checkin, @RequestParam("checkout") Optional<String> checkout) throws SQLException {
+        Rooms rooms;
+
+        if (checkin.isPresent() && checkout.isPresent()) {
+            rooms = roomService.getUnavailableRooms(checkin.get(), checkout.get());
+        } else {
+            rooms = roomService.getRooms();
+        }
 
         return ResponseEntity.status(HttpStatus.OK).body(rooms);
     }
 
     @RequestMapping(value = "/{id:[0-9]*}", method = RequestMethod.GET)
-    public ResponseEntity getRoom(@PathVariable(value = "id") int roomId) throws SQLException {
+    public ResponseEntity<Room> getRoom(@PathVariable(value = "id") int roomId) throws SQLException {
         RoomResult roomResult = roomService.getSpecificRoom(roomId);
 
         return ResponseEntity.status(roomResult.getHttpStatus()).body(roomResult.getRoom());
@@ -40,7 +47,7 @@ public class RoomController {
     }
 
     @RequestMapping(value = "/{id:[0-9]*}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteRoom(@PathVariable(value = "id") int roomId, @CookieValue(value ="token", required = false) String token) throws SQLException {
+    public ResponseEntity<?> deleteRoom(@PathVariable(value = "id") int roomId, @CookieValue(value ="token", required = false) String token) throws SQLException {
         RoomResult roomResult = roomService.deleteRoom(roomId, token);
 
         return ResponseEntity.status(roomResult.getHttpStatus()).build();

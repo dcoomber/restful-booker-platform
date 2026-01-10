@@ -2,8 +2,8 @@ package com.automationintesting.model.db;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.*;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

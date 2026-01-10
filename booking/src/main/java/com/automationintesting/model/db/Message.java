@@ -2,13 +2,7 @@ package com.automationintesting.model.db;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import jakarta.persistence.Entity;
 
 @Entity
 public class Message {

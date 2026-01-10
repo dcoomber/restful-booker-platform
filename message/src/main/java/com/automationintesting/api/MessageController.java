@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.sql.SQLException;
 
 @RestController
@@ -34,7 +34,7 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/{id:[0-9]*}", method = RequestMethod.GET)
-    public ResponseEntity getMessage(@PathVariable(value = "id") int messageId) throws SQLException {
+    public ResponseEntity<Message> getMessage(@PathVariable(value = "id") int messageId) throws SQLException {
         MessageResult messageResult = messageService.getSpecificMessage(messageId);
 
         return ResponseEntity.status(messageResult.getHttpStatus()).body(messageResult.getMessage());
@@ -48,14 +48,14 @@ public class MessageController {
     }
 
     @RequestMapping(value = "/{id:[0-9]*}", method = RequestMethod.DELETE)
-    public ResponseEntity deleteMessage(@PathVariable(value = "id") int messageId, @CookieValue(value ="token", required = false) String token) throws SQLException {
+    public ResponseEntity<?> deleteMessage(@PathVariable(value = "id") int messageId, @CookieValue(value ="token", required = false) String token) throws SQLException {
         MessageResult messageResult = messageService.deleteMessage(messageId, token);
 
         return ResponseEntity.status(messageResult.getHttpStatus()).build();
     }
 
     @RequestMapping(value = "/{id:[0-9]*}/read", method = RequestMethod.PUT)
-    public ResponseEntity markAsRead(@PathVariable(value = "id") int messageId, @CookieValue(value ="token", required = false) String token) throws SQLException {
+    public ResponseEntity<?> markAsRead(@PathVariable(value = "id") int messageId, @CookieValue(value ="token", required = false) String token) throws SQLException {
         HttpStatus messageStatus = messageService.markAsRead(messageId, token);
 
         return ResponseEntity.status(messageStatus).build();

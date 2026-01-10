@@ -13,7 +13,7 @@ if %errorlevel%==1 (
     @echo https://automationintesting.com/setup/settingupjava
     @echo:
     @echo Press CTRL+C to quit
-    exit
+    exit /b 1
 )
 
 where javac >nul 2>nul
@@ -22,7 +22,7 @@ if %errorlevel%==1 (
     @echo https://automationintesting.com/setup/settingupjava
     @echo:
     @echo Press CTRL+C to quit
-    exit
+    exit /b 1
 )
 
 where mvn >nul 2>nul
@@ -31,7 +31,7 @@ if %errorlevel%==1 (
     @echo https://automationintesting.com/setup/settingupmaven
     @echo:
     @echo Press CTRL+C to quit
-    pause>nul
+    exit /b 1
 )
 
 if "%JAVA_HOME%"=="" (
@@ -39,8 +39,7 @@ if "%JAVA_HOME%"=="" (
     @echo https://automationintesting.com/setup/settingupmaven
     @echo:
     @echo Press CTRL+C to quit
-    pause>nul
-    exit
+    exit /b 1
 )
 
 where node >nul 2>nul
@@ -49,7 +48,7 @@ if %errorlevel%==1 (
     @echo https://automationintesting.com/setup/settingupnode
     @echo:
     @echo Press CTRL+C to quit
-    pause>nul
+    exit /b 1
 )
 
 where npm >nul 2>nul
@@ -58,7 +57,7 @@ if %errorlevel%==1 (
     @echo https://automationintesting.com/setup/settingupmaven
     @echo:
     @echo Press CTRL+C to quit
-    pause>nul
+    exit /b 1
 )
 
 echo:
@@ -72,14 +71,7 @@ echo:
 set cmdFileDirectory=%~dp0
 
 cd %cmdFileDirectory%
-call mvn clean
-
-cd %cmdFileDirectory%
-if defined APPLITOOLS_API_KEY (
-    call mvn install -P ci
-) else (
-    echo Skipping visual checks because no applitools api key has been set. Assign a key to APPLITOOLS_API_KEY to run visual checks
-    call mvn install
-)
+call mvn clean install
+if %errorlevel% neq 0 exit /b %errorlevel%
 
 CALL run_locally.cmd true

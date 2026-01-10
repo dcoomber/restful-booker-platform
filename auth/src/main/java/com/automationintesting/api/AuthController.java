@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
 @RestController
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
-    public ResponseEntity clearToken(@RequestBody Token token) throws SQLException {
+    public ResponseEntity<?> clearToken(@RequestBody Token token) throws SQLException {
         HttpStatus httpStatus = authService.deleteToken(token);
 
         return ResponseEntity.status(httpStatus).build();

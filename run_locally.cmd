@@ -28,11 +28,10 @@ START /B java -jar -Dspring.profiles.active=dev branding/target/%branding_jar% >
 for /f "delims=" %%a in ('dir message\target\*.jar /B /O:D') do set "message_jar=%%a"
 START /B java -jar -Dspring.profiles.active=dev message/target/%message_jar% > message.log &
 
-for /f "delims=" %%a in ('dir assets\api\target\*.jar /B /O:D') do set "assets_jar=%%a"
-START /B java -jar -Dspring.profiles.active=dev assets/api/target/%assets_jar% > ui.log
+cd assets
+START /B npm run dev
 
-for /f "delims=" %%a in ('dir proxy\target\*.jar /B /O:D') do set "proxy_jar=%%a"
-START /B java -jar proxy/target/%proxy_jar% > proxy.log
+cd ..
 
 call node .utilities/monitor/local_monitor.js
 
@@ -60,7 +59,7 @@ echo ####                               ####
 echo ####      APPLICATION READY        ####
 echo ####                               ####
 echo ####         Available at:         ####
-echo ####     http://localhost:8080     ####
+echo ####     http://localhost:3003     ####
 echo ####                               ####
 echo ####      PRESS ENTER TO QUIT      ####
 echo ####                               ####

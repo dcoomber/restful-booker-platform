@@ -2,8 +2,8 @@ package com.automationintesting.model.db;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.validation.constraints.*;
+import jakarta.persistence.Entity;
+import jakarta.validation.constraints.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -45,6 +45,17 @@ public class Room {
     }
 
     public Room(String roomName, String type, boolean accessible, String image, String description, String[] features, int roomPrice) {
+        this.roomName = roomName;
+        this.type = type;
+        this.accessible = accessible;
+        this.image = image;
+        this.description = description;
+        this.features = features;
+        this.roomPrice = roomPrice;
+    }
+
+    public Room(int roomid, String roomName, String type, boolean accessible, String image, String description, String[] features, int roomPrice) {
+        this.roomid = roomid;
         this.roomName = roomName;
         this.type = type;
         this.accessible = accessible;
@@ -153,7 +164,6 @@ public class Room {
 
     public static class RoomBuilder {
 
-        private int roomid;
         private String roomName;
         private String type;
         private boolean accessible;
@@ -161,12 +171,6 @@ public class Room {
         private String description;
         private String[] features;
         private int roomPrice;
-
-        public RoomBuilder setRoomid(int roomid) {
-            this.roomid = roomid;
-
-            return this;
-        }
 
         public RoomBuilder setRoomName(String roomName) {
             this.roomName = roomName;

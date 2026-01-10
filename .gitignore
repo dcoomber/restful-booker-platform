@@ -19,6 +19,10 @@ target/
 .settings/
 *.settings/
 *.classpath
+.vscode/
 
 # ui
 ui/public/js
+
+# ApprovalTests
+**/.approval_tests_temp/

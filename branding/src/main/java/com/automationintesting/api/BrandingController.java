@@ -1,16 +1,13 @@
 package com.automationintesting.api;
 
-import com.automationintesting.db.BrandingDB;
 import com.automationintesting.model.db.Branding;
 import com.automationintesting.model.service.BrandingResult;
-import com.automationintesting.requests.AuthRequests;
 import com.automationintesting.service.BrandingService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.sql.SQLException;
 
 @RestController
